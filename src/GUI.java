@@ -32,12 +32,16 @@ import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JTable;
 import javax.swing.border.BevelBorder;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import javax.swing.JRadioButton;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.awt.event.ActionEvent;
 
 public class GUI {
 	
@@ -86,7 +90,9 @@ public class GUI {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	@SuppressWarnings("unchecked")
 	private void initialize() {
+		
 		TorrentSimulator = new JFrame();
 		TorrentSimulator.setTitle("Torrent Simulator");
 		TorrentSimulator.setSize(600, 400);
@@ -252,23 +258,12 @@ public class GUI {
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		PeerEditor.setLeftComponent(list);
 		
-		JSplitPane splitPane_1 = new JSplitPane();
-		tabbedPane.addTab("Peer Creator", null, splitPane_1, null);
-		
-		JList list_1 = new JList();
-		list_1.setModel(new AbstractListModel() {
-			String[] values = new String[] {"test"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
-		splitPane_1.setLeftComponent(list_1);
+		JSplitPane PeerCreator = new JSplitPane();
+		PeerCreator.setContinuousLayout(true);
+		tabbedPane.addTab("Peer Creator", null, PeerCreator, null);
 		
 		JPanel panel = new JPanel();
-		splitPane_1.setRightComponent(panel);
+		PeerCreator.setRightComponent(panel);
 		panel.setLayout(null);
 		
 		textField = new JTextField();
@@ -325,6 +320,12 @@ public class GUI {
 		panel.add(lblConnections_1);
 		
 		JButton btnCreate = new JButton("Create!");
+		btnCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Sim.addPeer(new Peer("TEST2", new Color(1,1,1)));
+				//list.ad(new Peer("TEST2", new Color(1,1,1)));
+			}
+		});
 		btnCreate.setBounds(199, 278, 98, 26);
 		panel.add(btnCreate);
 		
@@ -358,6 +359,22 @@ public class GUI {
 		JLabel lblB = new JLabel("B");
 		lblB.setBounds(388, 51, 16, 16);
 		panel.add(lblB);
+		
+		JList list_1 = new JList();
+		list_1.setModel(new DefaultListModel() {
+			//ArrayList<Peer> values = Sim.peers;
+			public int getSize() {
+				return Sim.peers.size();
+			}
+			public Object getElementAt(int index) {
+				return Sim.peers.get(index);
+			}
+		    public void update() {
+		        this.fireContentsChanged(this, 0, Sim.peers.size() - 1);
+		    }
+		});
+		
+		PeerCreator.setLeftComponent(list_1);
 		
 		JPanel panel_6 = new JPanel();
 		tabbedPane.addTab("Torrent Creator", null, panel_6, null);
@@ -440,6 +457,7 @@ public class GUI {
 				VisSim.run = !(VisSim.run);
 			}
 		});
+		
 		menu.add(Run);
 		
 		JCheckBoxMenuItem checkBoxMenuItem_1 = new JCheckBoxMenuItem("New check item");
