@@ -16,5 +16,4 @@ public class Peer {
 		torrents = new ArrayList<Torrent>();
 		connections = new ArrayList<Connection>();
 	}
-	
 }

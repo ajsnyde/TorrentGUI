@@ -36,6 +36,8 @@ import javax.swing.JTable;
 import javax.swing.border.BevelBorder;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JButton;
+import javax.swing.JRadioButton;
 
 public class GUI {
 	
@@ -43,6 +45,7 @@ public class GUI {
 	private JTextField textField_1;
 	private JTable table;
 	private JTextField textField;
+	private JTextField textField_2;
 
 	public static void main(String[] args) {
 		 try {
@@ -254,7 +257,7 @@ public class GUI {
 		
 		JList list_1 = new JList();
 		list_1.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Test", "Test", "Test", "Test", "Test", "Test", "Test", "Test", "Test", "Test", "Test", "Test", "Test", "Test", "Test", "Test", "Test", "Test2", "TestFinal"};
+			String[] values = new String[] {"test"};
 			public int getSize() {
 				return values.length;
 			}
@@ -282,7 +285,7 @@ public class GUI {
 		panel_2.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel_2.setBackground(Color.WHITE);
 		panel_2.setForeground(Color.BLACK);
-		panel_2.setBounds(12, 81, 276, 215);
+		panel_2.setBounds(12, 51, 276, 215);
 		panel.add(panel_2);
 		panel_2.setLayout(null);
 		
@@ -317,8 +320,103 @@ public class GUI {
 		spinner_3.setBounds(8, 86, 92, 24);
 		panel_2.add(spinner_3);
 		
+		JLabel lblConnections_1 = new JLabel("Connections");
+		lblConnections_1.setBounds(105, 35, 77, 16);
+		panel.add(lblConnections_1);
+		
+		JButton btnCreate = new JButton("Create!");
+		btnCreate.setBounds(199, 278, 98, 26);
+		panel.add(btnCreate);
+		
+		JSlider slider_1 = new JSlider();
+		slider_1.setValue(0);
+		slider_1.setMaximum(255);
+		slider_1.setBounds(404, 20, 98, 16);
+		panel.add(slider_1);
+		
+		JSlider slider_2 = new JSlider();
+		slider_2.setValue(0);
+		slider_2.setMaximum(255);
+		slider_2.setBounds(404, 35, 98, 16);
+		panel.add(slider_2);
+		
+		JSlider slider_3 = new JSlider();
+		slider_3.setMajorTickSpacing(255);
+		slider_3.setValue(0);
+		slider_3.setMaximum(255);
+		slider_3.setBounds(404, 51, 98, 16);
+		panel.add(slider_3);
+		
+		JLabel lblR = new JLabel("R");
+		lblR.setBounds(388, 20, 16, 16);
+		panel.add(lblR);
+		
+		JLabel lblG = new JLabel("G");
+		lblG.setBounds(388, 35, 16, 16);
+		panel.add(lblG);
+		
+		JLabel lblB = new JLabel("B");
+		lblB.setBounds(388, 51, 16, 16);
+		panel.add(lblB);
+		
 		JPanel panel_6 = new JPanel();
 		tabbedPane.addTab("Torrent Creator", null, panel_6, null);
+		panel_6.setLayout(new BorderLayout(0, 0));
+		
+		JSplitPane splitPane_2 = new JSplitPane();
+		panel_6.add(splitPane_2, BorderLayout.CENTER);
+		
+		JList list_2 = new JList();
+		list_2.setModel(new AbstractListModel() {
+			String[] values = new String[] {"Torrent"};
+			public int getSize() {
+				return values.length;
+			}
+			public Object getElementAt(int index) {
+				return values[index];
+			}
+		});
+		splitPane_2.setLeftComponent(list_2);
+		
+		JPanel panel_7 = new JPanel();
+		splitPane_2.setRightComponent(panel_7);
+		panel_7.setLayout(null);
+		
+		textField_2 = new JTextField();
+		textField_2.setBounds(204, 5, 114, 20);
+		panel_7.add(textField_2);
+		textField_2.setColumns(10);
+		
+		JLabel lblName_1 = new JLabel("Name:");
+		lblName_1.setBounds(150, 7, 36, 16);
+		panel_7.add(lblName_1);
+		
+		JSpinner spinner_4 = new JSpinner();
+		spinner_4.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1024)));
+		spinner_4.setBounds(12, 36, 136, 41);
+		panel_7.add(spinner_4);
+		
+		JLabel lblTotalSize = new JLabel("Total Size");
+		lblTotalSize.setBounds(166, 48, 55, 16);
+		panel_7.add(lblTotalSize);
+		
+		JRadioButton rdbtnSections = new JRadioButton("# Sections");
+		rdbtnSections.setBounds(22, 85, 121, 24);
+		panel_7.add(rdbtnSections);
+		
+		JRadioButton rdbtnSectionSize = new JRadioButton("Section Size");
+		rdbtnSectionSize.setSelected(true);
+		rdbtnSectionSize.setBounds(150, 85, 121, 24);
+		panel_7.add(rdbtnSectionSize);
+		
+		JSpinner spinner_5 = new JSpinner();
+		spinner_5.setEnabled(false);
+		spinner_5.setBounds(32, 117, 76, 20);
+		panel_7.add(spinner_5);
+		
+		JSpinner spinner_6 = new JSpinner();
+		spinner_6.setBounds(160, 117, 76, 20);
+		panel_7.add(spinner_6);
 		
 		JPanel panel_5 = new JPanel();
 		tabbedPane.addTab("Events", null, panel_5, null);
