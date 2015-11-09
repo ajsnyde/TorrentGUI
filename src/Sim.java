@@ -28,6 +28,12 @@ public class Sim {
 			return new Peer("FAILED", new Color(0,0,0));
 	}
 	
+	public Peer getFromID(int ID){
+		// TODO returns Peer from ID 
+		return null;
+	}
+	
+	
 	public void tick(){
 		
 	}

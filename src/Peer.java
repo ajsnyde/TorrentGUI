@@ -1,7 +1,7 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class Peer {
+public class Peer implements Algorithm{
 	static int keyCounter = -1;
 	final int ID;
 	Color color;
@@ -36,6 +36,31 @@ public class Peer {
 	}
 	public void addTorrent(Torrent in){
 		torrents.add(in);
+	}
+	@Override
+	public void run() {
+		
+		
+	}
+	
+	public int getRecipient(){
+		for(int i = 0; i<connections.size(); ++i){
+			if(connections.get(i).totalTraffic != connections.get(i).totalCapacity)
+				return i;			
+		}
+		return ID;
+	}
+	
+	public void giveSection(Section in){
+		
+		// TODO
+		
+	}
+	
+	@Override
+	public int findSection() {
+		
+		return 0;
 	}
 	
 }
