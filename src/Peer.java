@@ -16,4 +16,26 @@ public class Peer {
 		torrents = new ArrayList<Torrent>();
 		connections = new ArrayList<Connection>();
 	}
+	Peer(String name){
+		ID = ++keyCounter;
+		this.name = name;
+		this.color = new Color(0,0,0);
+		torrents = new ArrayList<Torrent>();
+		connections = new ArrayList<Connection>();
+	}
+	
+	// Obvious/simple getters/setters
+	public int getkeyCounter(){
+		return keyCounter;
+	}
+	public int getID(){
+		return ID;
+	}
+	public void addConnection(Connection in){
+		connections.add(in);
+	}
+	public void addTorrent(Torrent in){
+		torrents.add(in);
+	}
+	
 }

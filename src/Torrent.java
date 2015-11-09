@@ -9,11 +9,19 @@ public class Torrent {
 	Torrent(){
 		ID = ++keyCounter;
 		sections = new ArrayList<Boolean>(32);
+		name = "default";
 	}
 	
 	Torrent(int size){
 		ID = ++keyCounter;
 		sections = new ArrayList<Boolean>(size);
+		name = "default1";
+	}
+	
+	Torrent(int size, String name){
+		ID = ++keyCounter;
+		sections = new ArrayList<Boolean>(size);
+		this.name = name;
 	}
 	
 	void reset(){
@@ -22,12 +30,21 @@ public class Torrent {
 		}
 	}
 	
-	void add(int index){
-		sections.set(index, true);
+	void set(int index, boolean in){
+		sections.set(index, in);
 	}
 	
 	int getID(){
 		return ID;
+	}
+	int getkeyCounter(){
+		return keyCounter;
+	}
+	
+	void initializeFalse(int size){
+		sections.clear();
+		for(int i = 0; i < size; ++i)
+			sections.add(true);	
 	}
 	
 	Boolean check(int index){
