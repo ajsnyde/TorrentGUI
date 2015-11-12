@@ -48,7 +48,7 @@ public class GUI {
 	private JFrame TorrentSimulator;
 	private JTextField textField_1;
 	private JTable table;
-	private JTextField textField;
+	private JTextField peerNameField;
 	private JTextField textField_2;
 
 	public static void main(String[] args) {
@@ -111,7 +111,7 @@ public class GUI {
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		Simulator.add(splitPane, BorderLayout.CENTER);
-		
+		final JList peerList = new JList();
 		VisSim connect = new VisSim();
 		
 		JPanel visualSimulator = VisSim.displayPanel;
@@ -208,34 +208,6 @@ public class GUI {
 			new Object[][] {
 				{null},
 				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
-				{null},
 			},
 			new String[] {
 				"New column"
@@ -245,16 +217,16 @@ public class GUI {
 		table.setBounds(8, 147, 442, 149);
 		panel_1.add(table);
 		
-		JList list = new JList();
-		list.setModel(new AbstractListModel() {
-			String[] values = new String[] {"1", "2", "3", "4", "5", "6", "7", "8", "9"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+		
+		final DefaultListModel<String> peerModel = new DefaultListModel<String>();
+		peerModel.addElement("TEST");
+		for(Peer peer: Sim.peers)
+			peerModel.addElement(peer.name);
+		
+		final JList<String> list = new JList<String>(peerModel);
+
+		
+		
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		PeerEditor.setLeftComponent(list);
 		
@@ -266,11 +238,11 @@ public class GUI {
 		PeerCreator.setRightComponent(panel);
 		panel.setLayout(null);
 		
-		textField = new JTextField();
-		textField.setToolTipText("When multiple peers are made, a suffix number will be attached. (i.e. example2)");
-		textField.setBounds(213, 5, 114, 20);
-		panel.add(textField);
-		textField.setColumns(10);
+		peerNameField = new JTextField();
+		peerNameField.setToolTipText("When multiple peers are made, a suffix number will be attached. (i.e. example2)");
+		peerNameField.setBounds(213, 5, 114, 20);
+		panel.add(peerNameField);
+		peerNameField.setColumns(10);
 		
 		JLabel lblName = new JLabel("Name:");
 		lblName.setBounds(165, 7, 39, 16);
@@ -322,11 +294,12 @@ public class GUI {
 		JButton btnCreate = new JButton("Create!");
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Sim.addPeer(new Peer("TEST2", new Color(1,1,1)));
-				//list.ad(new Peer("TEST2", new Color(1,1,1)));
+				Peer in = new Peer(peerNameField.getText(), new Color(1,1,1));
+				Sim.addPeer(in);
+					peerModel.addElement(peerNameField.getText() + in.ID);
 			}
 		});
-		btnCreate.setBounds(199, 278, 98, 26);
+		btnCreate.setBounds(165, 278, 98, 26);
 		panel.add(btnCreate);
 		
 		JSlider slider_1 = new JSlider();
@@ -360,8 +333,19 @@ public class GUI {
 		lblB.setBounds(388, 51, 16, 16);
 		panel.add(lblB);
 		
-		JList list_1 = new JList();
-		list_1.setModel(new DefaultListModel() {
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int i = list.getSelectedIndex();
+				System.out.println(i);
+				peerModel.removeElementAt(i);
+			}
+		});
+		btnDelete.setBounds(275, 278, 98, 26);
+		panel.add(btnDelete);
+		
+		
+		peerList.setModel(new DefaultListModel() {
 			//ArrayList<Peer> values = Sim.peers;
 			public int getSize() {
 				return Sim.peers.size();
@@ -374,7 +358,7 @@ public class GUI {
 		    }
 		});
 		
-		PeerCreator.setLeftComponent(list_1);
+		PeerCreator.setLeftComponent(peerList);
 		
 		JPanel panel_6 = new JPanel();
 		tabbedPane.addTab("Torrent Creator", null, panel_6, null);
