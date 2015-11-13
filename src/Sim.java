@@ -18,14 +18,14 @@ public class Sim {
 		torrents.add(in);
 	}
 	
-	public Peer getPeer(int i){
+	public static Peer getPeer(int i){
 		if(i >= 0 && i < peers.size())
 			return peers.get(i);
 		else
 			return new Peer("FAILED", new Color(0,0,0));
 	}
 	
-	public Peer getFromID(int ID){
+	public static Peer getFromID(int ID){
 		for(int i=0; i<peers.size(); ++i)
 			if(peers.get(i).ID == ID)
 				return peers.get(i);

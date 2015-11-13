@@ -46,16 +46,20 @@ import java.awt.event.ActionEvent;
 import javax.swing.ListModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.Toolkit;
 
 public class GUI {
 	
 	private JFrame TorrentSimulator;
 	private JTextField peerNameField;
 	private JTextField textField;
+	private JTextField peerID;
 
 	public static void main(String[] args) {
 		 try {
-			UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -92,10 +96,10 @@ public class GUI {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	@SuppressWarnings("unchecked")
 	private void initialize() {
 		
 		TorrentSimulator = new JFrame();
+		TorrentSimulator.setIconImage(Toolkit.getDefaultToolkit().getImage(GUI.class.getResource("/Pictures/p2p.png")));
 		TorrentSimulator.setTitle("Torrent Simulator");
 		TorrentSimulator.setSize(625, 400);
 		TorrentSimulator.setMinimumSize(new Dimension(625, 400));
@@ -183,6 +187,7 @@ public class GUI {
 		tabbedPane.addTab("Peer Creator", null, PeerCreator, null);
 
 		final JList<Peer> peerList = new JList<Peer>(peerModel);
+
 		Dimension minimumSize = new Dimension(50, 100);
 		peerList.setMinimumSize(minimumSize);
 		PeerCreator.setLeftComponent(peerList);
@@ -278,6 +283,7 @@ public class GUI {
 		blueSlider.setBounds(404, 51, 98, 16);
 		peerCreatorPanel.add(blueSlider);
 		
+		
 		final JButton peerCreate = new JButton("Create!");
 		peerCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -300,11 +306,45 @@ public class GUI {
 					peerModel.addElement(peer);
 			}
 		});
+		peerList.addMouseListener(new MouseAdapter() {
+		    public void mouseClicked(MouseEvent evt) {
+		        @SuppressWarnings("rawtypes")
+				JList list = (JList)evt.getSource();
+		        if (evt.getClickCount() == 2) {
+		            // Double-click detected
+		            int index = list.locationToIndex(evt.getPoint());
+		            Peer peer = peerModel.getElementAt(index);
+		            peerNameField.setText(peer.name);
+		            peerID.setText("ID: " + peer.ID);
+		            redSlider.setValue(peer.color.getRed());
+		            blueSlider.setValue(peer.color.getBlue());
+		            greenSlider.setValue(peer.color.getGreen());
+		        }
+		    }
+		});
 		
 		peerCreate.setBounds(165, 278, 98, 26);
 		peerCreatorPanel.add(peerCreate);
 		peerDelete.setBounds(275, 278, 98, 26);
 		peerCreatorPanel.add(peerDelete);
+		
+		JButton peerChange = new JButton("Apply Changes");
+		peerChange.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				peerList.getSelectedValue().name = peerNameField.getText();
+				peerList.getSelectedValue().color = new Color(redSlider.getValue(),greenSlider.getValue(),blueSlider.getValue());
+			}
+		});
+		peerChange.setBounds(48, 278, 105, 26);
+		peerCreatorPanel.add(peerChange);
+		
+		peerID = new JTextField();
+		peerID.setText("ID: null");
+		peerID.setEditable(false);
+		peerID.setEnabled(false);
+		peerID.setBounds(105, 5, 48, 20);
+		peerCreatorPanel.add(peerID);
+		peerID.setColumns(10);
 		
 		//Torrent List + Model
 		
