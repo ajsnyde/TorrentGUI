@@ -41,13 +41,12 @@ import javax.swing.JButton;
 import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 import java.awt.event.ActionEvent;
 
 public class GUI {
 	
 	private JFrame TorrentSimulator;
-	private JTextField textField_1;
-	private JTable table;
 	private JTextField peerNameField;
 	private JTextField textField_2;
 
@@ -171,68 +170,18 @@ public class GUI {
 		lblAnimationSpeed.setBounds(270, 12, 135, 16);
 		panel_4.add(lblAnimationSpeed);
 		
-		JSplitPane PeerEditor = new JSplitPane();
-		tabbedPane.addTab("Peer Editor", null, PeerEditor, null);
 		
-		JPanel panel_1 = new JPanel();
-		PeerEditor.setRightComponent(panel_1);
-		panel_1.setLayout(null);
-		
-		JCheckBox chckbxEnabled = new JCheckBox("Enabled?");
-		chckbxEnabled.setBounds(8, 8, 112, 24);
-		panel_1.add(chckbxEnabled);
-		
-		JLabel lblConnections = new JLabel("Connections");
-		lblConnections.setBounds(237, 123, 71, 16);
-		panel_1.add(lblConnections);
-		
-		textField_1 = new JTextField();
-		textField_1.setBounds(8, 40, 114, 20);
-		panel_1.add(textField_1);
-		textField_1.setColumns(10);
-		
-		JLabel lblPeerName = new JLabel("Peer Name");
-		lblPeerName.setBounds(128, 42, 85, 16);
-		panel_1.add(lblPeerName);
-		
-		JSpinner spinner_7 = new JSpinner();
-		spinner_7.setBounds(8, 72, 50, 20);
-		panel_1.add(spinner_7);
-		
-		JLabel lblPeerSumMax = new JLabel("Peer Sum Max Speed");
-		lblPeerSumMax.setBounds(72, 72, 155, 16);
-		panel_1.add(lblPeerSumMax);
-		
-		table = new JTable();
-		table.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null},
-				{null},
-			},
-			new String[] {
-				"New column"
-			}
-		));
-		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		table.setBounds(8, 147, 442, 149);
-		panel_1.add(table);
-		
-		
-		final DefaultListModel<String> peerModel = new DefaultListModel<String>();
-		peerModel.addElement("TEST");
+		final DefaultListModel<Peer> peerModel = new DefaultListModel<Peer>();
+		peerModel.addElement(new Peer("Test/Spacer", new Color(1,1,1)));
 		for(Peer peer: Sim.peers)
-			peerModel.addElement(peer.name);
-		
-		final JList<String> list = new JList<String>(peerModel);
-
-		
-		
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		PeerEditor.setLeftComponent(list);
+			peerModel.addElement(peer);
 		
 		JSplitPane PeerCreator = new JSplitPane();
 		PeerCreator.setContinuousLayout(true);
 		tabbedPane.addTab("Peer Creator", null, PeerCreator, null);
+		
+		final JList<Peer> list = new JList<Peer>(peerModel);
+		PeerCreator.setLeftComponent(list);
 		
 		JPanel panel = new JPanel();
 		PeerCreator.setRightComponent(panel);
@@ -298,7 +247,7 @@ public class GUI {
 				Sim.peers.add(in);
 				peerModel.clear();
 				for(Peer peer: Sim.peers)
-					peerModel.addElement(peer.name);
+					peerModel.addElement(peer);
 			}
 		});
 		btnCreate.setBounds(165, 278, 98, 26);
@@ -338,33 +287,16 @@ public class GUI {
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Peer in = new Peer(peerNameField.getText(), new Color(1,1,1));
-				
-				
-				
+				List<Peer> hitList = list.getSelectedValuesList();
+				for(Peer kill: hitList)
+					Sim.peers.remove(kill);
 				peerModel.clear();
 				for(Peer peer: Sim.peers)
-					peerModel.addElement(peer.name);
+					peerModel.addElement(peer);
 			}
 		});
 		btnDelete.setBounds(275, 278, 98, 26);
 		panel.add(btnDelete);
-		
-		
-		peerList.setModel(new DefaultListModel() {
-			//ArrayList<Peer> values = Sim.peers;
-			public int getSize() {
-				return Sim.peers.size();
-			}
-			public Object getElementAt(int index) {
-				return Sim.peers.get(index);
-			}
-		    public void update() {
-		        this.fireContentsChanged(this, 0, Sim.peers.size() - 1);
-		    }
-		});
-		
-		PeerCreator.setLeftComponent(peerList);
 		
 		JPanel panel_6 = new JPanel();
 		tabbedPane.addTab("Torrent Creator", null, panel_6, null);
