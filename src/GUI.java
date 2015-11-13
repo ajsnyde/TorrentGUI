@@ -295,8 +295,10 @@ public class GUI {
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Peer in = new Peer(peerNameField.getText(), new Color(1,1,1));
-				Sim.addPeer(in);
-					peerModel.addElement(peerNameField.getText() + in.ID);
+				Sim.peers.add(in);
+				peerModel.clear();
+				for(Peer peer: Sim.peers)
+					peerModel.addElement(peer.name);
 			}
 		});
 		btnCreate.setBounds(165, 278, 98, 26);
@@ -336,9 +338,13 @@ public class GUI {
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int i = list.getSelectedIndex();
-				System.out.println(i);
-				peerModel.removeElementAt(i);
+				Peer in = new Peer(peerNameField.getText(), new Color(1,1,1));
+				
+				
+				
+				peerModel.clear();
+				for(Peer peer: Sim.peers)
+					peerModel.addElement(peer.name);
 			}
 		});
 		btnDelete.setBounds(275, 278, 98, 26);

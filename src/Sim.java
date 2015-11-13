@@ -29,7 +29,9 @@ public class Sim {
 	}
 	
 	public Peer getFromID(int ID){
-		// TODO returns Peer from ID 
+		for(int i=0; i<peers.size(); ++i)
+			if(peers.get(i).ID == ID)
+				return peers.get(i);
 		return null;
 	}
 	
