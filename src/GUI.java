@@ -43,12 +43,15 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.event.ActionEvent;
+import javax.swing.ListModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class GUI {
 	
 	private JFrame TorrentSimulator;
 	private JTextField peerNameField;
-	private JTextField textField_2;
+	private JTextField textField;
 
 	public static void main(String[] args) {
 		 try {
@@ -94,8 +97,8 @@ public class GUI {
 		
 		TorrentSimulator = new JFrame();
 		TorrentSimulator.setTitle("Torrent Simulator");
-		TorrentSimulator.setSize(600, 400);
-		TorrentSimulator.setMinimumSize(new Dimension(600, 400));
+		TorrentSimulator.setSize(625, 400);
+		TorrentSimulator.setMinimumSize(new Dimension(625, 400));
 		TorrentSimulator.setBackground(Color.LIGHT_GRAY);
 		TorrentSimulator.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		TorrentSimulator.getContentPane().setLayout(new BorderLayout(0, 0));
@@ -275,8 +278,8 @@ public class GUI {
 		blueSlider.setBounds(404, 51, 98, 16);
 		peerCreatorPanel.add(blueSlider);
 		
-		JButton btnCreate = new JButton("Create!");
-		btnCreate.addActionListener(new ActionListener() {
+		final JButton peerCreate = new JButton("Create!");
+		peerCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Peer in = new Peer(peerNameField.getText(), new Color(redSlider.getValue(),greenSlider.getValue(),blueSlider.getValue()));
 				Sim.peers.add(in);
@@ -286,8 +289,8 @@ public class GUI {
 			}
 		});		
 		
-		JButton btnDelete = new JButton("Delete");
-		btnDelete.addActionListener(new ActionListener() {
+		final JButton peerDelete = new JButton("Delete");
+		peerDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				List<Peer> hitList = peerList.getSelectedValuesList();
 				for(Peer kill: hitList)
@@ -298,69 +301,78 @@ public class GUI {
 			}
 		});
 		
-		btnCreate.setBounds(165, 278, 98, 26);
-		peerCreatorPanel.add(btnCreate);
-		btnDelete.setBounds(275, 278, 98, 26);
-		peerCreatorPanel.add(btnDelete);
+		peerCreate.setBounds(165, 278, 98, 26);
+		peerCreatorPanel.add(peerCreate);
+		peerDelete.setBounds(275, 278, 98, 26);
+		peerCreatorPanel.add(peerDelete);
 		
-		JPanel panel_6 = new JPanel();
-		tabbedPane.addTab("Torrent Creator", null, panel_6, null);
-		panel_6.setLayout(new BorderLayout(0, 0));
+		//Torrent List + Model
 		
-		JSplitPane splitPane_2 = new JSplitPane();
-		panel_6.add(splitPane_2, BorderLayout.CENTER);
+		final DefaultListModel<Torrent> torrentModel = new DefaultListModel<Torrent>();
 		
-		JList torrentList = new JList();
-		torrentList.setModel(new AbstractListModel() {
-			String[] values = new String[] {"Torrent"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
+		JSplitPane TorrentCreator = new JSplitPane();
+		tabbedPane.addTab("Torrent Creator", null, TorrentCreator, null);
+		
+		
+		JList<Torrent> torrentList = new JList<Torrent>(torrentModel);
+		for(Torrent torrent: Sim.torrents)
+			torrentModel.addElement(torrent);
+		torrentList.setMinimumSize(new Dimension(50, 100));
+		TorrentCreator.setLeftComponent(torrentList);
+		
+		JPanel torrentCreatorPanel = new JPanel();
+		torrentCreatorPanel.setLayout(null);
+		TorrentCreator.setRightComponent(torrentCreatorPanel);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(204, 5, 114, 20);
+		torrentCreatorPanel.add(textField);
+		
+		JLabel label = new JLabel("Name:");
+		label.setBounds(150, 7, 36, 16);
+		torrentCreatorPanel.add(label);
+		
+		JSpinner spinner_1 = new JSpinner();
+		spinner_1.setBounds(12, 36, 136, 41);
+		torrentCreatorPanel.add(spinner_1);
+		
+		JLabel label_1 = new JLabel("Total Size");
+		label_1.setBounds(166, 48, 55, 16);
+		torrentCreatorPanel.add(label_1);
+		
+		JRadioButton radioButton = new JRadioButton("# Sections");
+		radioButton.setBounds(22, 85, 121, 24);
+		torrentCreatorPanel.add(radioButton);
+		
+		JRadioButton radioButton_1 = new JRadioButton("Section Size");
+		radioButton_1.setSelected(true);
+		radioButton_1.setBounds(150, 85, 121, 24);
+		torrentCreatorPanel.add(radioButton_1);
+		
+		JSpinner spinner_2 = new JSpinner();
+		spinner_2.setEnabled(false);
+		spinner_2.setBounds(32, 117, 76, 20);
+		torrentCreatorPanel.add(spinner_2);
+		
+		JSpinner spinner_3 = new JSpinner();
+		spinner_3.setBounds(160, 117, 76, 20);
+		torrentCreatorPanel.add(spinner_3);
+		
+		JButton torrentCreate = new JButton("Create!");
+		torrentCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Torrent in = new Torrent();
+				Sim.addTorrent(in);
+				
 			}
 		});
-		splitPane_2.setLeftComponent(torrentList);
+		torrentCreate.setBounds(138, 270, 98, 26);
+		torrentCreatorPanel.add(torrentCreate);
 		
-		JPanel panel_7 = new JPanel();
-		splitPane_2.setRightComponent(panel_7);
-		panel_7.setLayout(null);
-		
-		textField_2 = new JTextField();
-		textField_2.setBounds(204, 5, 114, 20);
-		panel_7.add(textField_2);
-		textField_2.setColumns(10);
-		
-		JLabel lblName_1 = new JLabel("Name:");
-		lblName_1.setBounds(150, 7, 36, 16);
-		panel_7.add(lblName_1);
-		
-		JSpinner spinner_4 = new JSpinner();
-		spinner_4.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1024)));
-		spinner_4.setBounds(12, 36, 136, 41);
-		panel_7.add(spinner_4);
-		
-		JLabel lblTotalSize = new JLabel("Total Size");
-		lblTotalSize.setBounds(166, 48, 55, 16);
-		panel_7.add(lblTotalSize);
-		
-		JRadioButton rdbtnSections = new JRadioButton("# Sections");
-		rdbtnSections.setBounds(22, 85, 121, 24);
-		panel_7.add(rdbtnSections);
-		
-		JRadioButton rdbtnSectionSize = new JRadioButton("Section Size");
-		rdbtnSectionSize.setSelected(true);
-		rdbtnSectionSize.setBounds(150, 85, 121, 24);
-		panel_7.add(rdbtnSectionSize);
-		
-		JSpinner spinner_5 = new JSpinner();
-		spinner_5.setEnabled(false);
-		spinner_5.setBounds(32, 117, 76, 20);
-		panel_7.add(spinner_5);
-		
-		JSpinner spinner_6 = new JSpinner();
-		spinner_6.setBounds(160, 117, 76, 20);
-		panel_7.add(spinner_6);
+		JButton torrentDelete = new JButton("Delete");
+		torrentDelete.setBounds(248, 270, 98, 26);
+		torrentCreatorPanel.add(torrentDelete);
 		
 		JPanel panel_5 = new JPanel();
 		tabbedPane.addTab("Events", null, panel_5, null);
@@ -382,6 +394,21 @@ public class GUI {
 		Run.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
 				VisSim.run = !(VisSim.run);
+			}
+		});
+		
+		peerNameField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if(arg0.getKeyCode() == KeyEvent.VK_ENTER)
+					peerCreate.doClick();
+			}
+		});
+		peerList.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if(arg0.getKeyCode() == KeyEvent.VK_DELETE)
+					peerDelete.doClick();
 			}
 		});
 		
