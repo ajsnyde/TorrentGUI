@@ -110,7 +110,6 @@ public class GUI {
 		JSplitPane splitPane = new JSplitPane();
 		splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		Simulator.add(splitPane, BorderLayout.CENTER);
-		final JList peerList = new JList();
 		VisSim connect = new VisSim();
 		
 		JPanel visualSimulator = VisSim.displayPanel;
@@ -176,118 +175,121 @@ public class GUI {
 		for(Peer peer: Sim.peers)
 			peerModel.addElement(peer);
 		
-		JSplitPane PeerCreator = new JSplitPane();
+		JSplitPane PeerCreator = new JSplitPane();	
 		PeerCreator.setContinuousLayout(true);
 		tabbedPane.addTab("Peer Creator", null, PeerCreator, null);
+
+		final JList<Peer> peerList = new JList<Peer>(peerModel);
+		Dimension minimumSize = new Dimension(50, 100);
+		peerList.setMinimumSize(minimumSize);
+		PeerCreator.setLeftComponent(peerList);
+
 		
-		final JList<Peer> list = new JList<Peer>(peerModel);
-		PeerCreator.setLeftComponent(list);
-		
-		JPanel panel = new JPanel();
-		PeerCreator.setRightComponent(panel);
-		panel.setLayout(null);
+		JPanel peerCreatorPanel = new JPanel();
+		PeerCreator.setRightComponent(peerCreatorPanel);
+		peerCreatorPanel.setLayout(null);
 		
 		peerNameField = new JTextField();
 		peerNameField.setToolTipText("When multiple peers are made, a suffix number will be attached. (i.e. example2)");
 		peerNameField.setBounds(213, 5, 114, 20);
-		panel.add(peerNameField);
+		peerCreatorPanel.add(peerNameField);
 		peerNameField.setColumns(10);
 		
+		JPanel connectionsPanel = new JPanel();
+		connectionsPanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		connectionsPanel.setBackground(Color.WHITE);
+		connectionsPanel.setForeground(Color.BLACK);
+		connectionsPanel.setBounds(12, 51, 276, 215);
+		peerCreatorPanel.add(connectionsPanel);
+		connectionsPanel.setLayout(null);
+		
+		JCheckBox connectAllBox = new JCheckBox("Connect to all peers");
+		connectAllBox.setBounds(8, 183, 190, 24);
+		connectionsPanel.add(connectAllBox);
+		
+		
+		// LABELS FOR PEER CREATOR
 		JLabel lblName = new JLabel("Name:");
 		lblName.setBounds(165, 7, 39, 16);
-		panel.add(lblName);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		panel_2.setBackground(Color.WHITE);
-		panel_2.setForeground(Color.BLACK);
-		panel_2.setBounds(12, 51, 276, 215);
-		panel.add(panel_2);
-		panel_2.setLayout(null);
-		
-		JCheckBox chckbxNewCheckBox = new JCheckBox("Connect to all peers");
-		chckbxNewCheckBox.setBounds(8, 183, 190, 24);
-		panel_2.add(chckbxNewCheckBox);
-		
-		JSpinner spinner_1 = new JSpinner();
-		spinner_1.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1024)));
-		spinner_1.setBounds(8, 12, 92, 24);
-		panel_2.add(spinner_1);
+		peerCreatorPanel.add(lblName);
 		
 		JLabel lblOutwardSpeed = new JLabel("Outgoing Speed");
 		lblOutwardSpeed.setBounds(107, 16, 91, 16);
-		panel_2.add(lblOutwardSpeed);
+		connectionsPanel.add(lblOutwardSpeed);
 		
 		JLabel lblIncomingSpeed = new JLabel("Incoming Speed");
 		lblIncomingSpeed.setBounds(107, 52, 91, 16);
-		panel_2.add(lblIncomingSpeed);
+		connectionsPanel.add(lblIncomingSpeed);
 		
 		JLabel lblCombinedLimit = new JLabel("Combined Limit");
 		lblCombinedLimit.setBounds(107, 88, 91, 16);
-		panel_2.add(lblCombinedLimit);
-		
-		JSpinner spinner_2 = new JSpinner();
-		spinner_2.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1024)));
-		spinner_2.setBounds(8, 48, 92, 24);
-		panel_2.add(spinner_2);
-		
-		JSpinner spinner_3 = new JSpinner();
-		spinner_3.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1024)));
-		spinner_3.setBounds(8, 86, 92, 24);
-		panel_2.add(spinner_3);
+		connectionsPanel.add(lblCombinedLimit);
 		
 		JLabel lblConnections_1 = new JLabel("Connections");
 		lblConnections_1.setBounds(105, 35, 77, 16);
-		panel.add(lblConnections_1);
+		peerCreatorPanel.add(lblConnections_1);
+		
+		JLabel lblR = new JLabel("R");
+		lblR.setBounds(388, 20, 16, 16);
+		peerCreatorPanel.add(lblR);
+		
+		JLabel lblG = new JLabel("G");
+		lblG.setBounds(388, 35, 16, 16);
+		peerCreatorPanel.add(lblG);
+		
+		JLabel lblB = new JLabel("B");
+		lblB.setBounds(388, 51, 16, 16);
+		peerCreatorPanel.add(lblB);
+		
+		JSpinner outgoingSpinner = new JSpinner();
+		outgoingSpinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1024)));
+		outgoingSpinner.setBounds(8, 12, 92, 24);
+		connectionsPanel.add(outgoingSpinner);
+		
+		JSpinner incomingSpinner = new JSpinner();
+		incomingSpinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1024)));
+		incomingSpinner.setBounds(8, 48, 92, 24);
+		connectionsPanel.add(incomingSpinner);
+		
+		JSpinner combinedSpinner = new JSpinner();
+		combinedSpinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1024)));
+		combinedSpinner.setBounds(8, 86, 92, 24);
+		connectionsPanel.add(combinedSpinner);
+		
+		final JSlider redSlider = new JSlider();
+		redSlider.setValue(0);
+		redSlider.setMaximum(255);
+		redSlider.setBounds(404, 20, 98, 16);
+		peerCreatorPanel.add(redSlider);
+		
+		final JSlider greenSlider = new JSlider();
+		greenSlider.setValue(0);
+		greenSlider.setMaximum(255);
+		greenSlider.setBounds(404, 35, 98, 16);
+		peerCreatorPanel.add(greenSlider);
+		
+		final JSlider blueSlider = new JSlider();
+		blueSlider.setMajorTickSpacing(255);
+		blueSlider.setValue(0);
+		blueSlider.setMaximum(255);
+		blueSlider.setBounds(404, 51, 98, 16);
+		peerCreatorPanel.add(blueSlider);
 		
 		JButton btnCreate = new JButton("Create!");
 		btnCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Peer in = new Peer(peerNameField.getText(), new Color(1,1,1));
+				Peer in = new Peer(peerNameField.getText(), new Color(redSlider.getValue(),greenSlider.getValue(),blueSlider.getValue()));
 				Sim.peers.add(in);
 				peerModel.clear();
 				for(Peer peer: Sim.peers)
 					peerModel.addElement(peer);
 			}
-		});
-		btnCreate.setBounds(165, 278, 98, 26);
-		panel.add(btnCreate);
-		
-		JSlider slider_1 = new JSlider();
-		slider_1.setValue(0);
-		slider_1.setMaximum(255);
-		slider_1.setBounds(404, 20, 98, 16);
-		panel.add(slider_1);
-		
-		JSlider slider_2 = new JSlider();
-		slider_2.setValue(0);
-		slider_2.setMaximum(255);
-		slider_2.setBounds(404, 35, 98, 16);
-		panel.add(slider_2);
-		
-		JSlider slider_3 = new JSlider();
-		slider_3.setMajorTickSpacing(255);
-		slider_3.setValue(0);
-		slider_3.setMaximum(255);
-		slider_3.setBounds(404, 51, 98, 16);
-		panel.add(slider_3);
-		
-		JLabel lblR = new JLabel("R");
-		lblR.setBounds(388, 20, 16, 16);
-		panel.add(lblR);
-		
-		JLabel lblG = new JLabel("G");
-		lblG.setBounds(388, 35, 16, 16);
-		panel.add(lblG);
-		
-		JLabel lblB = new JLabel("B");
-		lblB.setBounds(388, 51, 16, 16);
-		panel.add(lblB);
+		});		
 		
 		JButton btnDelete = new JButton("Delete");
 		btnDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				List<Peer> hitList = list.getSelectedValuesList();
+				List<Peer> hitList = peerList.getSelectedValuesList();
 				for(Peer kill: hitList)
 					Sim.peers.remove(kill);
 				peerModel.clear();
@@ -295,8 +297,11 @@ public class GUI {
 					peerModel.addElement(peer);
 			}
 		});
+		
+		btnCreate.setBounds(165, 278, 98, 26);
+		peerCreatorPanel.add(btnCreate);
 		btnDelete.setBounds(275, 278, 98, 26);
-		panel.add(btnDelete);
+		peerCreatorPanel.add(btnDelete);
 		
 		JPanel panel_6 = new JPanel();
 		tabbedPane.addTab("Torrent Creator", null, panel_6, null);
@@ -305,8 +310,8 @@ public class GUI {
 		JSplitPane splitPane_2 = new JSplitPane();
 		panel_6.add(splitPane_2, BorderLayout.CENTER);
 		
-		JList list_2 = new JList();
-		list_2.setModel(new AbstractListModel() {
+		JList torrentList = new JList();
+		torrentList.setModel(new AbstractListModel() {
 			String[] values = new String[] {"Torrent"};
 			public int getSize() {
 				return values.length;
@@ -315,7 +320,7 @@ public class GUI {
 				return values[index];
 			}
 		});
-		splitPane_2.setLeftComponent(list_2);
+		splitPane_2.setLeftComponent(torrentList);
 		
 		JPanel panel_7 = new JPanel();
 		splitPane_2.setRightComponent(panel_7);

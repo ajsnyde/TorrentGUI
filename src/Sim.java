@@ -7,11 +7,8 @@ public class Sim {
 	static ArrayList<Connection> connections = new ArrayList<Connection>();
 	
 	
-	Sim(){		// TESTING ALSO...
-		addPeer(new Peer("Hi!", new Color(1,1,1)));
-		addPeer(new Peer("Hi1!", new Color(1,1,1)));
-		addPeer(new Peer("Hi2!", new Color(1,1,1)));
-		addTorrent(new Torrent());
+	Sim(){
+		
 	}
 	
 	public static void addPeer(Peer in){
