@@ -15,7 +15,7 @@ public class Torrent {
 	Torrent(int size){
 		ID = ++keyCounter;
 		sections = new ArrayList<Boolean>(size);
-		name = "default1";
+		name = "torrent_"+ID;
 	}
 	
 	Torrent(int size, String name){

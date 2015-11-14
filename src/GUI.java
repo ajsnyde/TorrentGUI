@@ -363,31 +363,51 @@ public class GUI {
 		label.setBounds(150, 7, 36, 16);
 		torrentCreatorPanel.add(label);
 		
-		JSpinner spinner_1 = new JSpinner();
-		spinner_1.setBounds(12, 36, 136, 41);
-		torrentCreatorPanel.add(spinner_1);
+		final JSpinner torrentTotalSizeSpinner = new JSpinner();
+		torrentTotalSizeSpinner.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1024)));
+		torrentTotalSizeSpinner.setBounds(12, 36, 136, 41);
+		torrentCreatorPanel.add(torrentTotalSizeSpinner);
 		
 		JLabel label_1 = new JLabel("Total Size");
 		label_1.setBounds(166, 48, 55, 16);
 		torrentCreatorPanel.add(label_1);
+		final JRadioButton torrentSectionSizeButton = new JRadioButton("Section Size");
+		final JRadioButton torrentSectionsButton = new JRadioButton("# Sections");
+		torrentSectionSizeButton.setSelected(true);
+		torrentSectionSizeButton.setBounds(150, 85, 121, 24);
+		torrentCreatorPanel.add(torrentSectionSizeButton);
+		torrentSectionsButton.setBounds(22, 85, 121, 24);
+		torrentCreatorPanel.add(torrentSectionsButton);
+		final JSpinner torrentSectionsSpinner = new JSpinner();
 		
-		JRadioButton radioButton = new JRadioButton("# Sections");
-		radioButton.setBounds(22, 85, 121, 24);
-		torrentCreatorPanel.add(radioButton);
+		torrentSectionsSpinner.setEnabled(false);
+		torrentSectionsSpinner.setBounds(32, 117, 76, 20);
+		torrentCreatorPanel.add(torrentSectionsSpinner);
 		
-		JRadioButton radioButton_1 = new JRadioButton("Section Size");
-		radioButton_1.setSelected(true);
-		radioButton_1.setBounds(150, 85, 121, 24);
-		torrentCreatorPanel.add(radioButton_1);
+		final JSpinner torrentSectionSizeSpinner = new JSpinner();
+		torrentSectionSizeSpinner.setBounds(160, 117, 76, 20);
+		torrentCreatorPanel.add(torrentSectionSizeSpinner);
 		
-		JSpinner spinner_2 = new JSpinner();
-		spinner_2.setEnabled(false);
-		spinner_2.setBounds(32, 117, 76, 20);
-		torrentCreatorPanel.add(spinner_2);
 		
-		JSpinner spinner_3 = new JSpinner();
-		spinner_3.setBounds(160, 117, 76, 20);
-		torrentCreatorPanel.add(spinner_3);
+		
+		torrentSectionSizeButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				torrentSectionsButton.setSelected(false);
+				torrentSectionsSpinner.setEnabled(false);
+				torrentSectionSizeSpinner.setEnabled(true);
+				if((int)torrentSectionSizeSpinner.getValue()!=0)
+				torrentSectionsSpinner.setValue((int)torrentTotalSizeSpinner.getValue()/(int)torrentSectionSizeSpinner.getValue());
+			}
+		});
+		torrentSectionsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				torrentSectionSizeButton.setSelected(false);
+				torrentSectionSizeSpinner.setEnabled(false);
+				torrentSectionsSpinner.setEnabled(true);
+				if((int)torrentSectionsSpinner.getValue()!=0)
+					torrentSectionSizeSpinner.setValue((int)torrentTotalSizeSpinner.getValue()/(int)torrentSectionsSpinner.getValue());
+			}
+		});
 		
 		JButton torrentCreate = new JButton("Create!");
 		torrentCreate.addActionListener(new ActionListener() {
