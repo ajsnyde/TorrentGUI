@@ -100,6 +100,11 @@ public class GUI {
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		TorrentSimulator.getContentPane().add(tabbedPane);
 		
+		ConnectionCreator in = new ConnectionCreator();
+		
+		tabbedPane.addTab("Connection Creator", null, in, null);
+		
+		
 		JPanel Simulator = new JPanel();
 		tabbedPane.addTab("Visual Simulator", null, Simulator, null);
 		Simulator.setLayout(new BorderLayout(0, 0));
