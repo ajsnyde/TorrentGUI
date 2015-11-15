@@ -36,14 +36,9 @@ public class PeerCreator extends JPanel {
 		add(Split);
 		//List on the left	
 
-		peerModel.addElement(new Peer("Test/Spacer", new Color(1,1,1)));
-		for(Peer peer: Sim.peers)
-			peerModel.addElement(peer);		
-
-
-		Dimension minimumSize = new Dimension(50, 100);
-		peerList.setMinimumSize(minimumSize);
+		peerList.setMinimumSize(new Dimension(100, 100));
 		Split.setLeftComponent(peerList);
+		updateList();
 		final JTextField peerID = new JTextField();
 		
 		//Panel on the right

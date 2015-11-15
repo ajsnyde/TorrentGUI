@@ -23,20 +23,12 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.border.LineBorder;
 import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JList;
-import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
-import javax.swing.JButton;
-import javax.swing.JRadioButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 
 public class GUI {
 	
 	private JFrame TorrentSimulator;
-	private JTextField textField;
 
 	public static void main(String[] args) {
 		 try {
@@ -151,104 +143,11 @@ public class GUI {
 		lblAnimationSpeed.setBounds(270, 12, 135, 16);
 		panel_4.add(lblAnimationSpeed);
 		
+		final PeerCreator peerCreator = new PeerCreator();
+		tabbedPane.addTab("Peer Creator", null, peerCreator, null);
 		
-		final DefaultListModel<Peer> peerModel = new DefaultListModel<Peer>();
-		peerModel.addElement(new Peer("Test/Spacer", new Color(1,1,1)));
-		for(Peer peer: Sim.peers)
-			peerModel.addElement(peer);
-		
-		final PeerCreator in_1 = new PeerCreator();
-		tabbedPane.addTab("Peer Creator", null, in_1, null);
-
-		Dimension minimumSize = new Dimension(50, 100);
-		
-		//Torrent List + Model
-		
-		final DefaultListModel<Torrent> torrentModel = new DefaultListModel<Torrent>();
-		
-		JSplitPane TorrentCreator = new JSplitPane();
-		tabbedPane.addTab("Torrent Creator", null, TorrentCreator, null);
-		
-		
-		JList<Torrent> torrentList = new JList<Torrent>(torrentModel);
-		for(Torrent torrent: Sim.torrents)
-			torrentModel.addElement(torrent);
-		torrentList.setMinimumSize(new Dimension(50, 100));
-		TorrentCreator.setLeftComponent(torrentList);
-		
-		JPanel torrentCreatorPanel = new JPanel();
-		torrentCreatorPanel.setLayout(null);
-		TorrentCreator.setRightComponent(torrentCreatorPanel);
-		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(204, 5, 114, 20);
-		torrentCreatorPanel.add(textField);
-		
-		JLabel label = new JLabel("Name:");
-		label.setBounds(150, 7, 36, 16);
-		torrentCreatorPanel.add(label);
-		
-		final JSpinner torrentTotalSizeSpinner = new JSpinner();
-		torrentTotalSizeSpinner.setModel(new SpinnerNumberModel(new Integer(0), null, null, new Integer(1024)));
-		torrentTotalSizeSpinner.setBounds(12, 36, 136, 41);
-		torrentCreatorPanel.add(torrentTotalSizeSpinner);
-		
-		JLabel label_1 = new JLabel("Total Size");
-		label_1.setBounds(166, 48, 55, 16);
-		torrentCreatorPanel.add(label_1);
-		final JRadioButton torrentSectionSizeButton = new JRadioButton("Section Size");
-		final JRadioButton torrentSectionsButton = new JRadioButton("# Sections");
-		torrentSectionSizeButton.setSelected(true);
-		torrentSectionSizeButton.setBounds(150, 85, 121, 24);
-		torrentCreatorPanel.add(torrentSectionSizeButton);
-		torrentSectionsButton.setBounds(22, 85, 121, 24);
-		torrentCreatorPanel.add(torrentSectionsButton);
-		final JSpinner torrentSectionsSpinner = new JSpinner();
-		
-		torrentSectionsSpinner.setEnabled(false);
-		torrentSectionsSpinner.setBounds(32, 117, 76, 20);
-		torrentCreatorPanel.add(torrentSectionsSpinner);
-		
-		final JSpinner torrentSectionSizeSpinner = new JSpinner();
-		torrentSectionSizeSpinner.setBounds(160, 117, 76, 20);
-		torrentCreatorPanel.add(torrentSectionSizeSpinner);
-		
-		
-		
-		torrentSectionSizeButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				torrentSectionsButton.setSelected(false);
-				torrentSectionsSpinner.setEnabled(false);
-				torrentSectionSizeSpinner.setEnabled(true);
-				if((int)torrentSectionSizeSpinner.getValue()!=0)
-				torrentSectionsSpinner.setValue((int)torrentTotalSizeSpinner.getValue()/(int)torrentSectionSizeSpinner.getValue());
-			}
-		});
-		torrentSectionsButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				torrentSectionSizeButton.setSelected(false);
-				torrentSectionSizeSpinner.setEnabled(false);
-				torrentSectionsSpinner.setEnabled(true);
-				if((int)torrentSectionsSpinner.getValue()!=0)
-					torrentSectionSizeSpinner.setValue((int)torrentTotalSizeSpinner.getValue()/(int)torrentSectionsSpinner.getValue());
-			}
-		});
-		
-		JButton torrentCreate = new JButton("Create!");
-		torrentCreate.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Torrent in = new Torrent();
-				Sim.addTorrent(in);
-				
-			}
-		});
-		torrentCreate.setBounds(138, 270, 98, 26);
-		torrentCreatorPanel.add(torrentCreate);
-		
-		JButton torrentDelete = new JButton("Delete");
-		torrentDelete.setBounds(248, 270, 98, 26);
-		torrentCreatorPanel.add(torrentDelete);
+		final TorrentCreator torrentCreator = new TorrentCreator();
+		tabbedPane.addTab("Torrent Creator", null, torrentCreator, null);
 		
 		JPanel panel_5 = new JPanel();
 		tabbedPane.addTab("Events", null, panel_5, null);
@@ -273,9 +172,9 @@ public class GUI {
 			}
 		});
 		
-		tabbedPane.addChangeListener(new ChangeListener() {	// TODO: Optimize this code so that updates only occur on specific tabs being selected
+		tabbedPane.addChangeListener(new ChangeListener() {	// TODO: Optimize (or remove) this code so that updates only occur on specific tabs being selected
 			public void stateChanged(ChangeEvent arg0) {
-				in_1.updateList();
+				peerCreator.updateList();
 			}
 		});
 		
