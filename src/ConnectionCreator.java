@@ -4,9 +4,6 @@ import javax.swing.JSplitPane;
 
 public class ConnectionCreator extends JPanel {
 
-	/**
-	 * Create the panel.
-	 */
 	public ConnectionCreator() {
 		
 		JSplitPane splitPane = new JSplitPane();
