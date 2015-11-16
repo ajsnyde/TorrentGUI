@@ -4,6 +4,8 @@ public class Torrent {
 	static int keyCounter = -1;
 	final int ID;
 	String name;
+	int totalSize;
+	int sectionSize = 8;
 	ArrayList<Boolean> sections;
 	
 	Torrent(){
@@ -18,10 +20,35 @@ public class Torrent {
 		name = "torrent_"+ID;
 	}
 	
-	Torrent(int size, String name){
-		ID = ++keyCounter;
-		sections = new ArrayList<Boolean>(size);
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getSectionSize() {
+		return sectionSize;
+	}
+
+	public void setSectionSize(int sectionSize) {
+		this.sectionSize = sectionSize;
+	}
+
+	public static int getKeyCounter() {
+		return keyCounter;
+	}
+
+	Torrent(int totalSize, int sectionSize, String name){
+		ID = ++keyCounter;
+		this.totalSize = totalSize;
+		this.sectionSize = sectionSize;
+		this.name = name;
+		if(sectionSize != 0)
+			sections = new ArrayList<Boolean>((totalSize/sectionSize)+1);
+		else
+			sections = new ArrayList<Boolean>((totalSize/8)+1);
 	}
 	
 	void reset(){
@@ -30,20 +57,17 @@ public class Torrent {
 		}
 	}
 	
-	void set(int index, boolean in){
+	void setSection(int index, boolean in){
 		sections.set(index, in);
 	}
 	
 	int getID(){
 		return ID;
 	}
-	int getkeyCounter(){
-		return keyCounter;
-	}
 	
-	void initializeFalse(int size){
+	void initializeFalse(){
 		sections.clear();
-		for(int i = 0; i < size; ++i)
+		for(int i = 0; i < (totalSize/sectionSize)+1; ++i)
 			sections.add(true);	
 	}
 	
