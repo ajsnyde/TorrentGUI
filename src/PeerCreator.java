@@ -162,8 +162,11 @@ public class PeerCreator extends JPanel {
 		JButton peerChange = new JButton("Apply Changes");
 		peerChange.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				peerList.getSelectedValue().name = peerNameField.getText();
-				peerList.getSelectedValue().color = new Color(redSlider.getValue(),greenSlider.getValue(),blueSlider.getValue());
+				List<Peer> hitList = peerList.getSelectedValuesList();
+				for(Peer change: hitList){		
+					change.name = peerNameField.getText();
+					change.color = new Color(redSlider.getValue(),greenSlider.getValue(),blueSlider.getValue());
+				}			
 			}
 		});
 		peerChange.setBounds(48, 278, 105, 26);
