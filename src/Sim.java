@@ -32,7 +32,10 @@ public class Sim {
 		return null;
 	}
 	
-	
+	public static void generateConnections(int Totalcapacity){
+		for(Peer peer: peers)
+			peer.generateConnections(Totalcapacity);
+	}
 	public void tick(){
 		
 	}

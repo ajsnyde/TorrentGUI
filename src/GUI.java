@@ -25,6 +25,8 @@ import javax.swing.border.LineBorder;
 import java.awt.Font;
 import javax.swing.JLabel;
 import java.awt.Toolkit;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class GUI {
 	
@@ -158,8 +160,13 @@ public class GUI {
 		JMenu menu = new JMenu("Test");
 		menuBar.add(menu);
 		
-		JMenuItem menuItem = new JMenuItem("New menu item");
-		menu.add(menuItem);
+		JMenuItem mntmUpdateConnections = new JMenuItem("Update Connections");
+		mntmUpdateConnections.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Sim.generateConnections(32);
+			}
+		});
+		menu.add(mntmUpdateConnections);
 		
 		JMenuItem menuItem_1 = new JMenuItem("New menu item");
 		menu.add(menuItem_1);

@@ -6,6 +6,7 @@ public class Peer implements Algorithm{
 	final int ID;
 	Color color;
 	String name;
+	int x, y;
 	ArrayList<Torrent> torrents;
 	ArrayList<Connection> connections;
 	
@@ -41,6 +42,15 @@ public class Peer implements Algorithm{
 	public void run() {
 		
 		
+	}
+	
+	public void generateConnections(int Totalcapacity){
+		connections.clear();
+		for(Peer peer: Sim.peers){
+			if(peer.ID != this.ID){
+				connections.add(new Connection(this.ID, peer.ID, Totalcapacity));
+			}
+		}
 	}
 	
 	public int getRecipient(){
