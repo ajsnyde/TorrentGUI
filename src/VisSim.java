@@ -12,6 +12,9 @@ public class VisSim {
 	static int DENSITY = 1;
 	static ArrayList<Particle> particles = new ArrayList<Particle>();
 	static int sleepTime;
+	static int peerWidth = 50;
+	static int peerHeight = 20;
+	
 	
 	public static class Canvas extends JPanel {
 		// all drawing on this canvas is auto-scaled
@@ -42,7 +45,11 @@ public class VisSim {
 					y = yMid;
 				}
 				g.setColor(Sim.peers.get(i).color);
-				g.fillRoundRect(x, y, 20, 20, 3, 3);
+				g.drawRoundRect(x- peerWidth/2, y- peerHeight/2, peerWidth, peerHeight, 3, 3);
+				g.setColor(Color.WHITE);
+				g.fillRoundRect(x+1- peerWidth/2, y+1- peerHeight/2, peerWidth-2, peerHeight-2, 3, 3);
+				g.setColor(Color.BLACK);
+				g.drawString(Sim.peers.get(i).name, x-peerHeight/2, y-(peerHeight/2)-1);
 				Sim.peers.get(i).x = x;
 				Sim.peers.get(i).y = y;
 			}
@@ -53,9 +60,6 @@ public class VisSim {
 				for(Connection connection: peer.connections)
 					g.drawLine(peer.x, peer.y, Sim.getFromID((connection.node2)).x, Sim.getFromID((connection.node2)).y);
 			}
-			
-			
-			
 		}
 		
 		public void update(Graphics g, int w, int h){

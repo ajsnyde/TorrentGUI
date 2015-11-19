@@ -145,6 +145,34 @@ public class GUI {
 		lblAnimationSpeed.setBounds(270, 12, 135, 16);
 		panel_4.add(lblAnimationSpeed);
 		
+		final JSpinner peerWidth = new JSpinner();
+		peerWidth.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				VisSim.peerWidth = (int) peerWidth.getValue();
+			}
+		});
+		peerWidth.setModel(new SpinnerNumberModel(new Integer(50), null, null, new Integer(1)));
+		peerWidth.setBounds(12, 105, 121, 32);
+		panel_4.add(peerWidth);
+		
+		final JSpinner peerHeight = new JSpinner();
+		peerHeight.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				VisSim.peerHeight = (int) peerHeight.getValue();
+			}
+		});
+		peerHeight.setModel(new SpinnerNumberModel(new Integer(20), null, null, new Integer(1)));
+		peerHeight.setBounds(12, 148, 121, 32);
+		panel_4.add(peerHeight);
+		
+		JLabel lblPeerWidth = new JLabel("Peer Width");
+		lblPeerWidth.setBounds(143, 114, 81, 14);
+		panel_4.add(lblPeerWidth);
+		
+		JLabel lblPeerHeight = new JLabel("Peer Height");
+		lblPeerHeight.setBounds(143, 157, 81, 14);
+		panel_4.add(lblPeerHeight);
+		
 		final PeerCreator peerCreator = new PeerCreator();
 		tabbedPane.addTab("Peer Creator", null, peerCreator, null);
 		
