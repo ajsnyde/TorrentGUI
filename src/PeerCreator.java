@@ -121,17 +121,18 @@ public class PeerCreator extends JPanel {
 		lblCombinedLimit.setBounds(107, 88, 91, 16);
 		connectionsPanel.add(lblCombinedLimit);
 		
-		JSpinner outgoingSpinner = new JSpinner();
+		final JSpinner outgoingSpinner = new JSpinner();
 		outgoingSpinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1024)));
 		outgoingSpinner.setBounds(8, 12, 92, 24);
 		connectionsPanel.add(outgoingSpinner);
 		
-		JSpinner incomingSpinner = new JSpinner();
+		final JSpinner incomingSpinner = new JSpinner();
 		incomingSpinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1024)));
 		incomingSpinner.setBounds(8, 48, 92, 24);
 		connectionsPanel.add(incomingSpinner);
 		
 		JSpinner combinedSpinner = new JSpinner();
+		combinedSpinner.setEnabled(false);
 		combinedSpinner.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1024)));
 		combinedSpinner.setBounds(8, 86, 92, 24);
 		connectionsPanel.add(combinedSpinner);
@@ -140,6 +141,8 @@ public class PeerCreator extends JPanel {
 		peerCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Peer in = new Peer(peerNameField.getText(), new Color(redSlider.getValue(),greenSlider.getValue(),blueSlider.getValue()));
+				in.node.maxIn = (int)incomingSpinner.getValue();
+				in.node.maxOut = (int)outgoingSpinner.getValue();
 				Sim.peers.add(in);
 				updateList();
 			}

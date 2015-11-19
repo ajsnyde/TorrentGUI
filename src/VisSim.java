@@ -46,6 +46,9 @@ public class VisSim {
 				Sim.peers.get(i).x = x;
 				Sim.peers.get(i).y = y;
 			}
+			for(Connection connection: Sim.connections)
+				g.drawLine(Sim.getFromID((connection.node1)).x, Sim.getFromID((connection.node1)).y, Sim.getFromID((connection.node2)).x, Sim.getFromID((connection.node2)).y);
+			
 			for(Peer peer: Sim.peers){
 				for(Connection connection: peer.connections)
 					g.drawLine(peer.x, peer.y, Sim.getFromID((connection.node2)).x, Sim.getFromID((connection.node2)).y);

@@ -9,11 +9,13 @@ public class Peer implements Algorithm{
 	int x, y;
 	ArrayList<Torrent> torrents;
 	ArrayList<Connection> connections;
+	Node node;
 	
 	Peer(String name, Color color){
 		ID = ++keyCounter;
 		this.name = name;
 		this.color = color;
+		node = new Node();
 		torrents = new ArrayList<Torrent>();
 		connections = new ArrayList<Connection>();
 	}
@@ -59,6 +61,13 @@ public class Peer implements Algorithm{
 				return i;			
 		}
 		return ID;
+	}
+	
+	public int hasTorrent(int torrentID){
+		for(int i=0; i<torrents.size(); ++i)
+			if(torrents.get(i).ID == torrentID)
+				return i;
+		return -1;
 	}
 	
 	public void giveSection(Section in){

@@ -168,8 +168,13 @@ public class GUI {
 		});
 		menu.add(mntmUpdateConnections);
 		
-		JMenuItem menuItem_1 = new JMenuItem("New menu item");
-		menu.add(menuItem_1);
+		JMenuItem Tick = new JMenuItem("Tick");
+		Tick.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Sim.tick();
+			}
+		});
+		menu.add(Tick);
 		
 		JCheckBoxMenuItem Run = new JCheckBoxMenuItem("Run");
 		Run.setSelected(true);

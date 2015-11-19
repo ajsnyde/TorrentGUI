@@ -18,6 +18,7 @@ import javax.swing.SpinnerNumberModel;
 import java.awt.BorderLayout;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import javax.swing.JCheckBox;
 
 public class TorrentCreator extends JPanel {
 	
@@ -112,11 +113,19 @@ public class TorrentCreator extends JPanel {
 		torrentCreatorPanel.add(torrentID);
 		torrentID.setColumns(10);
 		
+		final JCheckBox AddToAllPeers = new JCheckBox("Add to all Peers");
+		AddToAllPeers.setBounds(12, 141, 108, 23);
+		torrentCreatorPanel.add(AddToAllPeers);
+		
 		torrentCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Torrent in = new Torrent((int)torrentTotalSizeSpinner.getValue(), (int)torrentSectionSizeSpinner.getValue(), textField.getText());
 				in.initializeFalse();
 				Sim.addTorrent(in);
+				if(AddToAllPeers.isSelected())
+					for(Peer peer: Sim.peers){
+						peer.torrents.add(in);
+					}
 				updateList();
 			}
 		});
