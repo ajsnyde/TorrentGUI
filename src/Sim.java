@@ -22,7 +22,7 @@ public class Sim {
 		if(i >= 0 && i < peers.size())
 			return peers.get(i);
 		else
-			return new Peer("FAILED", new Color(0,0,0));
+			return null;
 	}
 	
 	public static Peer getFromID(int ID){
@@ -39,7 +39,7 @@ public class Sim {
 	public static void tick(){
 		for(Peer peer: peers){
 			for(Peer peer2: peers)
-				if(connectionPossible(peer, peer2) && sendSectionPossible(peer, peer2)){
+				if(connectionPossible(peer, peer2) && sendSectionPossible(peer, peer2)!=-1){
 					System.out.println("Creating new connection for uploader " + peer.name + " and downloader " + peer2.name);
 					connections.add(new Connection(peer.ID, peer2.ID, Math.min(peer.node.maxOut - peer.node.trafficOut, peer2.node.maxIn - peer2.node.trafficIn)));
 					peer.node.trafficOut = peer.node.maxOut;
@@ -47,10 +47,18 @@ public class Sim {
 					break;
 			}
 		}
+		for(Connection connection: connections){
+			for(int i = 0; i < connection.traffic.size(); ++i){
+				connection.traffic.get(i).sent += connection.totalCapacity/connection.traffic.size();
+				if(connection.traffic.get(i).sent >= connection.traffic.get(i).size)
+					connection.traffic.get(i).complete = true;
+					
+			}
+		}
 	}
 	public Peer getRecipient(Peer in){
 		for(Peer peer: peers){
-			if(connectionPossible(peer, in) && sendSectionPossible(peer, in))
+			if(connectionPossible(peer, in) && sendSectionPossible(peer, in)!=-1)
 				return peer;
 		}
 		return null;
@@ -61,16 +69,14 @@ public class Sim {
 		else
 			return false;
 	}
-	public static boolean sendSectionPossible(Peer in1, Peer in2){
+	public static int sendSectionPossible(Peer in1, Peer in2){
 		for(Torrent torrent: in1.torrents)
 			if(in2.hasTorrent(torrent.ID)>=0){
 				for(int i = 0; i<torrent.sections.size(); ++i){
-					if(torrent.sections.get(i) == true && in2.torrents.get(in2.hasTorrent(torrent.ID)).sections.get(i))
-						return true;
+					if(torrent.sections.get(i).complete == true && in2.torrents.get(in2.hasTorrent(torrent.ID)).sections.get(i).complete == false)
+						return i;
 				}
 			}
-		return false;
+		return -1;
 	}
 }
-
-
