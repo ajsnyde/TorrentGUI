@@ -27,6 +27,10 @@ public class Peer implements Algorithm{
 		connections = new ArrayList<Connection>();
 	}
 	
+	public String toString(){
+		return name;
+	}
+	
 	// Obvious/simple getters/setters
 	public int getkeyCounter(){
 		return keyCounter;

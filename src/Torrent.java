@@ -20,6 +20,10 @@ public class Torrent {
 		name = "torrent_"+ID;
 	}
 	
+	public String toString(){
+		return name;
+	}
+	
 	public String getName() {
 		return name;
 	}
