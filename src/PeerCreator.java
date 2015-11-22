@@ -1,4 +1,5 @@
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import java.awt.BorderLayout;
 import javax.swing.JList;
@@ -20,6 +21,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.ScrollPaneConstants;
 
 public class PeerCreator extends JPanel {
 	
@@ -36,8 +38,16 @@ public class PeerCreator extends JPanel {
 		add(Split);
 		//List on the left	
 
-		peerList.setMinimumSize(new Dimension(100, 100));
-		Split.setLeftComponent(peerList);
+		
+		JScrollPane peerScroll = new JScrollPane();
+		peerScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		peerScroll.setViewportView(peerList);
+		JPanel listHolder = new JPanel();
+		listHolder.setLayout(new BorderLayout(0, 0));
+		listHolder.add(peerScroll, BorderLayout.CENTER);
+		
+		peerScroll.setPreferredSize(new Dimension(100,50));
+		Split.setLeftComponent(listHolder);
 		updateList();
 		final JTextField peerID = new JTextField();
 		
