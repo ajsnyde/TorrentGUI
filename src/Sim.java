@@ -32,21 +32,8 @@ public class Sim {
 		return null;
 	}
 	
-	public static void generateConnections(int Totalcapacity){
-		for(Peer peer: peers)
-			peer.generateConnections(Totalcapacity);
-	}
 	public static void tick(){
-		for(Peer peer: peers){
-			for(Peer peer2: peers)
-				if(connectionPossible(peer, peer2) && sendSectionPossible(peer, peer2)!=-1){
-					System.out.println("Creating new connection for uploader " + peer.name + " and downloader " + peer2.name);
-					connections.add(new Connection(peer.ID, peer2.ID, Math.min(peer.node.maxOut - peer.node.trafficOut, peer2.node.maxIn - peer2.node.trafficIn)));
-					peer.node.trafficOut = peer.node.maxOut;
-					peer2.node.trafficIn = peer2.node.maxIn;
-					break;
-			}
-		}
+
 		for(Connection connection: connections){
 			for(int i = 0; i < connection.traffic.size(); ++i){
 				connection.traffic.get(i).sent += connection.totalCapacity/connection.traffic.size();

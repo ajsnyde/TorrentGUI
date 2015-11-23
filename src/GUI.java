@@ -78,6 +78,9 @@ public class GUI {
 
 		TorrentSimulator.getContentPane().add(tabbedPane);
 		
+		final PeerCreator peerCreator = new PeerCreator();
+		tabbedPane.addTab("Peer Creator", null, peerCreator, null);
+		
 		
 		JPanel Simulator = new JPanel();
 		tabbedPane.addTab("Visual Simulator", null, Simulator, null);
@@ -110,9 +113,6 @@ public class GUI {
 		
 		final VisStats visStats = new VisStats();
 		Stats.add(visStats, BorderLayout.CENTER);
-		
-		final PeerCreator peerCreator = new PeerCreator();
-		tabbedPane.addTab("Peer Creator", null, peerCreator, null);
 		
 		final TorrentCreator torrentCreator = new TorrentCreator();
 		tabbedPane.addTab("Torrent Creator", null, torrentCreator, null);

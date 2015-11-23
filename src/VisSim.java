@@ -14,7 +14,8 @@ public class VisSim {
 	static int sleepTime;
 	static int peerWidth = 50;
 	static int peerHeight = 20;
-	
+	static int x = 0;
+	static int y = 0;
 	
 	public static class Canvas extends JPanel {
 		// all drawing on this canvas is auto-scaled
@@ -28,13 +29,10 @@ public class VisSim {
 				displayPanel.repaint();
 				}
 			update(g,w,h);
-			if (particlesVisible)
-				for(int i = 0; i < particles.size(); i++)
-					particles.get(i).draw(g, w, h);
 			int xMid = w/2;
 			int yMid = h/2;
-			int x = 0;
-			int y = 0;
+			
+			//Draw peers
 			for(int i = 0; i<Sim.peers.size(); ++i){
 				if(Sim.peers.size() > 1){
 				x = (int) ((Math.sin(Math.toRadians((360.0/Sim.peers.size()))*i))*(xMid/1.3))+xMid;
@@ -53,8 +51,11 @@ public class VisSim {
 				Sim.peers.get(i).x = x;
 				Sim.peers.get(i).y = y;
 			}
+			
+			
 			for(Connection connection: Sim.connections)
 				g.drawLine(Sim.getFromID((connection.node1)).x, Sim.getFromID((connection.node1)).y, Sim.getFromID((connection.node2)).x, Sim.getFromID((connection.node2)).y);
+			
 			
 			for(Peer peer: Sim.peers){
 				for(Connection connection: peer.connections)

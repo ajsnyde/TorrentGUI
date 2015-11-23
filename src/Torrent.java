@@ -20,6 +20,14 @@ public class Torrent {
 		name = "torrent_"+ID;
 	}
 	
+	public boolean isComplete(){
+		for(Section section: sections){
+			if(section.complete == false)
+				return false;
+		}
+		return true;
+	}
+	
 	public String toString(){
 		return name;
 	}

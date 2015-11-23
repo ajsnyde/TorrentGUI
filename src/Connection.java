@@ -1,6 +1,11 @@
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class Connection {
+	
+	static final Color notInUse = new Color(0,0,0);
+	static final Color inUse = new Color(255,0,0);
+	
 	static int keyCounter = -1;
 	ArrayList<Section> traffic;
 	final int ID;
@@ -8,6 +13,7 @@ public class Connection {
 	int node2;
 	int totalTraffic = 0;
 	int totalCapacity;
+	Color color = new Color(0,0,0);
 	
 	Connection(int node1, int node2, int capacity){
 		ID = ++keyCounter;
@@ -45,5 +51,12 @@ public class Connection {
 		}
 		
 		return false;
+	}
+	public void updateColor(){
+		recalcluateTraffic();
+		double percentUtilized = totalTraffic/Math.max(Sim.getFromID(node1).node.maxOut, Sim.getFromID(node2).node.maxIn);
+		int difference = Math.abs(notInUse.getRed()-inUse.getRed());
+		int red = notInUse.getRed() + (int)(percentUtilized*difference);
+		color = new Color(red,0,0);
 	}
 }
