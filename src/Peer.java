@@ -62,15 +62,16 @@ public class Peer implements Algorithm{
 			for(int i = 0; i<5; peer = getRandomPeer())
 				if(sendSectionPossible(this, peer, torrent)!=-1){
 					
-					
-					
-					
-					
-					
-					
 					System.out.println("Creating new connection for uploader " + name + " and downloader " + peer.name);
-					connections.add(new Connection(ID, peer.ID, Math.min(node.maxOut - node.trafficOut, peer.node.maxIn - peer.node.trafficIn)));
-					Sim.connections.add(new Connection(ID, peer.ID, Math.min(node.maxOut - node.trafficOut, peer.node.maxIn - peer.node.trafficIn)));
+					Connection created = createConnection(peer, torrent);
+					node.trafficOut += created.totalTraffic;
+					connections.add(created);
+					Sim.connections.add(created);
+					
+					
+					
+					
+					
 					node.trafficOut = node.maxOut;
 					peer.node.trafficIn = peer.node.maxIn;
 					connections.get(connections.size()-1).updateColor();
@@ -78,9 +79,10 @@ public class Peer implements Algorithm{
 				}
 	}
 	
-	public Connection createConnection(Peer in1, Peer in2, Torrent torrent){
-		
-		
+	public Connection createConnection(Peer in2, Torrent torrent){
+		Connection out = new Connection(ID, in2.ID, Math.min(node.maxOut - node.trafficOut, in2.node.maxIn - in2.node.trafficIn));
+		out.addSection(new Section(torrent.ID, sendSectionPossible(this, in2, torrent)));
+		return out;
 	}
 	
 	
@@ -126,6 +128,11 @@ public class Peer implements Algorithm{
 	@Override
 	public int findSection() {
 		
+		return 0;
+	}
+	@Override
+	public int getRecipient() {
+		// TODO Auto-generated method stub
 		return 0;
 	}
 	

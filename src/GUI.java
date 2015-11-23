@@ -126,10 +126,10 @@ public class GUI {
 		JMenu menu = new JMenu("Test");
 		menuBar.add(menu);
 		
-		JMenuItem mntmUpdateConnections = new JMenuItem("Update Connections");
+		JMenuItem mntmUpdateConnections = new JMenuItem("Update Connections - DISABLED");
 		mntmUpdateConnections.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Sim.generateConnections(32);
+				
 			}
 		});
 		menu.add(mntmUpdateConnections);
