@@ -23,43 +23,42 @@ public class VisSim {
 		
 		public void paintComponent(Graphics g){
 			super.paintComponent(g);
+
 			int w = getWidth();
 			int h = getHeight();
+			int xMid = w/2;
+			int yMid = h/2;
+			
 			if(run){
 				displayPanel.repaint();
 				}
 			update(g,w,h);
-			int xMid = w/2;
-			int yMid = h/2;
+			
+			//Draw peer connections
+			g.setColor(Color.BLACK);
+			for(Peer peer: Peer.peers)
+				for(Connection connection: peer.connections)
+					g.drawLine(peer.x, peer.y, Peer.getFromID(connection.peer2).x, Peer.getFromID(connection.peer2).y);
 			
 			//Draw peers
-			for(int i = 0; i<Sim.peers.size(); ++i){
-				if(Sim.peers.size() > 1){
-				x = (int) ((Math.sin(Math.toRadians((360.0/Sim.peers.size()))*i))*(xMid/1.3))+xMid;
-				y = (int) ((Math.cos(Math.toRadians((360.0/Sim.peers.size()))*i))*(yMid/1.3))+yMid;
+			for(int i = 0; i<Peer.peers.size(); ++i){
+				if(Peer.peers.size() > 1){
+				x = (int) ((Math.sin(Math.toRadians((360.0/Peer.peers.size()))*i))*(xMid/1.3))+xMid;
+				y = (int) ((Math.cos(Math.toRadians((360.0/Peer.peers.size()))*i))*(yMid/1.3))+yMid;
 				}
 				else{
 					x = xMid;
 					y = yMid;
 				}
-				g.setColor(Sim.peers.get(i).color);
+				
+				g.setColor(Color.BLACK);
 				g.drawRoundRect(x- peerWidth/2, y- peerHeight/2, peerWidth, peerHeight, 3, 3);
 				g.setColor(Color.WHITE);
 				g.fillRoundRect(x+1- peerWidth/2, y+1- peerHeight/2, peerWidth-2, peerHeight-2, 3, 3);
 				g.setColor(Color.BLACK);
-				g.drawString(Sim.peers.get(i).name, x-peerHeight/2, y-(peerHeight/2)-1);
-				Sim.peers.get(i).x = x;
-				Sim.peers.get(i).y = y;
-			}
-			
-			
-			for(Connection connection: Sim.connections)
-				g.drawLine(Sim.getFromID((connection.node1)).x, Sim.getFromID((connection.node1)).y, Sim.getFromID((connection.node2)).x, Sim.getFromID((connection.node2)).y);
-			
-			
-			for(Peer peer: Sim.peers){
-				for(Connection connection: peer.connections)
-					g.drawLine(peer.x, peer.y, Sim.getFromID((connection.node2)).x, Sim.getFromID((connection.node2)).y);
+				g.drawString(Peer.peers.get(i).name, x-peerHeight/2, y-(peerHeight/2)-1);
+				Peer.peers.get(i).x = x;
+				Peer.peers.get(i).y = y;
 			}
 		}
 		

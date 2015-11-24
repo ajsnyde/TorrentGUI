@@ -1,139 +1,120 @@
-import java.awt.Color;
 import java.util.ArrayList;
 
-public class Peer implements Algorithm{
-	static int keyCounter = -1;
-	final int ID;
-	final int MAX_CONNECTIONS = 4;
-	Color color;
-	String name;
-	int x, y;
-	ArrayList<Torrent> torrents;
-	ArrayList<Connection> connections;
-	Node node;
+public class Peer{
 	
-	Peer(String name, Color color){
-		ID = ++keyCounter;
-		this.name = name;
-		this.color = color;
-		node = new Node();
-		torrents = new ArrayList<Torrent>();
-		connections = new ArrayList<Connection>();
-	}
+	static ArrayList<Peer> peers = new ArrayList<Peer>();
+	static int keyCounter = -1;
+	final static int MAX_CONNECTIONS = 4;
+	
+	ArrayList<Torrent> torrents = new ArrayList<Torrent>();
+	ArrayList<Connection> connections = new ArrayList<Connection>();
+	boolean complete = false;
+	final int ID;
+	String name;
+	int maxIn = 8192;
+	int maxOut = 1024;
+	int trafficIn = 0;
+	int trafficOut = 0;
+	int x;
+	int y;
+	
 	Peer(String name){
 		ID = ++keyCounter;
 		this.name = name;
-		this.color = new Color(0,0,0);
-		torrents = new ArrayList<Torrent>();
-		connections = new ArrayList<Connection>();
+		peers.add(this);
 	}
 	
 	public String toString(){
 		return name;
 	}
 	
-	// Obvious/simple getters/setters
-	public int getkeyCounter(){
-		return keyCounter;
-	}
-	public int getID(){
-		return ID;
-	}
 	public void addConnection(Connection in){
 		connections.add(in);
 	}
+	
 	public void addTorrent(Torrent in){
+		if(complete)
+			in.flood(true);
 		torrents.add(in);
 	}
 	
-	@Override
-	public void run() {
-		while(connections.size() < MAX_CONNECTIONS)
-			for(Torrent torrent: torrents)	// round-robin torrent selection, giving connections as possible
-				if(torrent.isComplete()){
-				{
-					
-				}
-			}
-	}
-	
-	public void findCandidate(Torrent torrent){
-			Peer peer = null;
-			for(int i = 0; i<5; peer = getRandomPeer())
-				if(sendSectionPossible(this, peer, torrent)!=-1){
-					
-					System.out.println("Creating new connection for uploader " + name + " and downloader " + peer.name);
-					Connection created = createConnection(peer, torrent);
-					node.trafficOut += created.totalTraffic;
-					connections.add(created);
-					Sim.connections.add(created);
-					
-					
-					
-					
-					
-					node.trafficOut = node.maxOut;
-					peer.node.trafficIn = peer.node.maxIn;
-					connections.get(connections.size()-1).updateColor();
-					break;
-				}
-	}
-	
-	public Connection createConnection(Peer in2, Torrent torrent){
-		Connection out = new Connection(ID, in2.ID, Math.min(node.maxOut - node.trafficOut, in2.node.maxIn - in2.node.trafficIn));
-		out.addSection(new Section(torrent.ID, sendSectionPossible(this, in2, torrent)));
-		return out;
-	}
-	
-	
-	
 	public Peer getRandomPeer(){
-		return Sim.peers.get((int)(Sim.peers.size()*Math.random()));
+		return peers.get((int)(peers.size()*Math.random()));
 	}
 	
-	
-	public static int sendSectionPossible(Peer in1, Peer in2, Torrent torrent){			// checks for any possible sending of sections between Peers..
-		if(connectionPossible(in1, in2))
-			if(in2.hasTorrent(torrent.ID)>=0){
-				for(int i = 0; i<torrent.sections.size(); ++i){
-					if(torrent.sections.get(i).complete == true && in2.torrents.get(in2.hasTorrent(torrent.ID)).sections.get(i).complete == false)
-						return i;
-				}
-			}
-		return -1;
-	}
-	
-	public static boolean connectionPossible(Peer in1, Peer in2){		// checks for connection
-		if(in1.node.getTrafficOut() < in1.node.getMaxOut() && in2.node.getTrafficIn() < in2.node.getMaxIn() && !in1.equals(in2))
-			return true;
-		else
-			return false;
-	}
-	
-	
-	
-	public int hasTorrent(int torrentID){
+	public int hasTorrent(int torrentID){	// TODO: Should this return a bool? Is the index necessary?
 		for(int i=0; i<torrents.size(); ++i)
 			if(torrents.get(i).ID == torrentID)
 				return i;
 		return -1;
 	}
 	
-	public void giveSection(Section in){
-		
-		// TODO
-		
+	public static Peer getFromID(int ID){	// TODO: add safety
+		for(int i=0; i<peers.size(); ++i)
+			if(peers.get(i).ID == ID)
+				return peers.get(i);
+		return null;
 	}
 	
-	@Override
-	public int findSection() {
-		
-		return 0;
-	}
-	@Override
-	public int getRecipient() {
-		// TODO Auto-generated method stub
-		return 0;
+	public Torrent getTorrent(int torrentID){ // TODO: add safety
+		for(Torrent torrent: torrents)
+			if(torrent.ID == torrentID)
+				return torrent;
+		return null;
 	}
 	
+	public void tick(){
+		// tick existing Connections
+		for(Connection connection: connections){
+			connection.tick();
+			if(connection.kill){
+				trafficOut -= connection.speed;
+				Peer.getFromID(connection.peer2).trafficIn -= connection.speed;
+				connections.remove(connection);
+				Connection.connections.remove(connection);
+			}
+		}
+		for(Torrent torrent: torrents){
+		sendSection(torrent);
+		}
+	}
+
+	public void sendSection(Torrent torrent){
+		Peer peer = getRandomPeer();
+			for(int i = 0; i<5; peer = getRandomPeer()){
+				if(sendSectionPossible(peer, torrent)!=-1){
+					System.out.println("Creating new connection for uploader " + name + " and downloader " + peer.name);
+					Connection created = createConnection(peer, torrent);
+					connections.add(created);
+					Connection.connections.add(created);
+				}
+				i++;
+			}
+	}
+	
+	public Connection createConnection(Peer in2, Torrent torrent){	// created Connection holding payload of FIRST possible section to transfer.
+		int speed = Math.min(((maxOut - trafficOut)/torrents.size()), in2.maxIn-in2.trafficIn);
+		Connection out = new Connection(this.ID, in2.ID, new Section(torrent.ID, sendSectionPossible(in2, torrent)), speed);
+		trafficOut += speed;
+		in2.trafficIn += speed;
+		return out;
+	}
+	
+	public int sendSectionPossible(Peer peer2, Torrent torrent){	// checks for any possible sending of sections between Peers..
+		if(connectionPossible(peer2))
+			if(peer2.hasTorrent(torrent.ID)>=0){
+				for(int i = 0; i<torrent.numSections; ++i){
+					if(torrent.sections[i] == true && peer2.getTorrent(torrent.ID).sections[i] == false)
+						return i;
+				}
+			}
+		return -1;
+	}
+	
+	public boolean connectionPossible(Peer peer2){		// checks for connection
+		if(trafficOut < maxOut && peer2.trafficIn < peer2.maxIn && ID!=peer2.ID)
+			return true;
+		else
+			return false;
+	}
 }

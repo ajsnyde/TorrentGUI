@@ -83,7 +83,7 @@ public class TorrentCreator extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				List<Torrent> hitList = torrentList.getSelectedValuesList();
 				for(Torrent kill: hitList)
-					Sim.torrents.remove(kill);
+					Torrent.torrents.remove(kill);
 				updateList();
 			}
 		});
@@ -119,11 +119,9 @@ public class TorrentCreator extends JPanel {
 		
 		torrentCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Torrent in = new Torrent((int)torrentTotalSizeSpinner.getValue(), (int)torrentSectionSizeSpinner.getValue(), textField.getText());
-				in.initializeFalse();
-				Sim.addTorrent(in);
+				Torrent in = new Torrent(textField.getText(), (int)torrentTotalSizeSpinner.getValue(), (int)torrentSectionSizeSpinner.getValue());
 				if(AddToAllPeers.isSelected())
-					for(Peer peer: Sim.peers){
+					for(Peer peer: Peer.peers){
 						peer.torrents.add(in);
 					}
 				updateList();
@@ -155,7 +153,7 @@ public class TorrentCreator extends JPanel {
 		            textField.setText(torrent.name);
 		            torrentTotalSizeSpinner.setValue(torrent.totalSize);
 		            torrentSectionSizeSpinner.setValue(torrent.sectionSize);
-		            torrentSections.setText(""+torrent.sections.size());
+		            torrentSections.setText(""+torrent.numSections);
 		            torrentID.setText("ID: " + torrent.ID);
 		        }
 		    }
@@ -165,7 +163,7 @@ public class TorrentCreator extends JPanel {
 	}
 	public void updateList(){
 		torrentModel.clear();
-		for(Torrent torrent: Sim.torrents)
+		for(Torrent torrent: Torrent.torrents)
 			torrentModel.addElement(torrent);
 	}
 	public void updateSections(){
