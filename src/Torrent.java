@@ -21,7 +21,7 @@ public class Torrent {
 		torrents.add(this);
 	}
 	
-	public boolean isComplete(){
+	public boolean isComplete(){	//FALSE NEGATIVE?
 		for(int i = 0; i < numSections; ++i)
 			if(!sections[i])
 				return false;

@@ -151,9 +151,10 @@ public class PeerCreator extends JPanel {
 		peerCreate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Peer in = new Peer(peerNameField.getText());
-					in.complete = connectAllBox.isSelected();
+				in.seed = connectAllBox.isSelected();
 				in.maxIn = (int)incomingSpinner.getValue();
 				in.maxOut = (int)outgoingSpinner.getValue();
+				Peer.peers.add(in);
 				updateList();
 			}
 		});		
@@ -210,6 +211,7 @@ public class PeerCreator extends JPanel {
 		            Peer peer = peerModel.getElementAt(index);
 		            peerNameField.setText(peer.name);
 		            peerID.setText("ID: " + peer.ID);
+		            connectAllBox.setSelected(peer.seed);
 		            //redSlider.setValue(peer.color.getRed());
 		            //blueSlider.setValue(peer.color.getBlue());
 		            //greenSlider.setValue(peer.color.getGreen());

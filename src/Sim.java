@@ -4,7 +4,9 @@ public class Sim {
 	}
 	
 	public static void tick(){
-		for(Peer peer: Peer.peers)
+		for(Peer peer: Peer.peers){
 			peer.tick();
+			peer.showTorrents();
+		}
 	}
 }

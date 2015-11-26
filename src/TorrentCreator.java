@@ -122,7 +122,7 @@ public class TorrentCreator extends JPanel {
 				Torrent in = new Torrent(textField.getText(), (int)torrentTotalSizeSpinner.getValue(), (int)torrentSectionSizeSpinner.getValue());
 				if(AddToAllPeers.isSelected())
 					for(Peer peer: Peer.peers){
-						peer.torrents.add(in);
+						peer.addTorrent(in);
 					}
 				updateList();
 			}
