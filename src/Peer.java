@@ -37,14 +37,15 @@ public class Peer{
 	
 	public void addTorrent(Torrent in){
 		if(seed){
-			System.out.println("Flooding torrent with TRUE");
+			System.out.println("Flooding torrent " + in.ID + " with TRUE");
 			in.flood(true);
 		}
 		else{
-			System.out.println("Flooding torrent with FALSE");
+			System.out.println("Flooding torrent " + in.ID + " with FALSE");
 			in.flood(false);
 		}
-		torrents.add(in);
+		System.out.println("IS COMPLETE: " + in.isComplete());
+		this.torrents.add(in);
 	}
 	
 	public Peer getRandomPeer(){	// should never run without peers availble to return
@@ -62,7 +63,7 @@ public class Peer{
 	
 	public void showTorrents(){	// TODO: Should this return a bool? Is the index necessary?
 		System.out.println(name + " has the following torrents:");
-		for(Torrent torrent: torrents){
+		for(Torrent torrent: this.torrents){
 			System.out.println(torrent.name + " - " + torrent.ID + " - " + torrent.isComplete());
 			for(int i = 0; i < torrent.numSections; ++i)
 				System.out.println(torrent.sections[i]);

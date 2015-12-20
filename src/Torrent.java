@@ -21,6 +21,13 @@ public class Torrent {
 		torrents.add(this);
 	}
 	
+	public static Torrent Copy(Torrent in){
+		Torrent out = new Torrent(in.name, in.totalSize, in.numSections);
+		out.ID = in.ID;
+		out.numSections = in.numSections;
+		out.sections = in.sections;
+	}
+	
 	public boolean isComplete(){	//FALSE NEGATIVE?
 		for(int i = 0; i < numSections; ++i)
 			if(!sections[i])
